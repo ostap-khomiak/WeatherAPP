@@ -3,6 +3,7 @@ package com.ostapkhomiak.weatherapp.ui.navigation
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Info
@@ -62,7 +63,7 @@ fun NavigationBarInit(navController: NavController) {
             "Forecast",
             "forecast",
             Icons.Outlined.Info,
-            Icons.Outlined.Info,
+            Icons.Filled.Info,
             false
         ),
         NavItem(
@@ -104,5 +105,4 @@ fun NavigationBarInit(navController: NavController) {
             )
         }
     }
-
 }
