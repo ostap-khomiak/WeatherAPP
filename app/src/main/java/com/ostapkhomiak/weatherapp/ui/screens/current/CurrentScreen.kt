@@ -96,20 +96,3 @@ fun WeatherContent(weather: Weather) {
     }
 }
 
-
-//@Preview(showBackground = true)
-//@Composable
-//fun CurrentWeatherPreview() {
-//    val sampleState = CurrentWeatherState(
-//        temperature = 12,
-//        weatherIconRes = android.R.drawable.ic_menu_compass,
-//        hourlyWeather = listOf(
-//            HourlyWeather("13:00", 12, android.R.drawable.ic_menu_compass),
-//            HourlyWeather("14:00", 11, android.R.drawable.ic_menu_compass),
-//            HourlyWeather("15:00", 10, android.R.drawable.ic_menu_compass)
-//        )
-//    )
-//
-//    CurrentWeatherScreen(state = sampleState)
-//}
-//
