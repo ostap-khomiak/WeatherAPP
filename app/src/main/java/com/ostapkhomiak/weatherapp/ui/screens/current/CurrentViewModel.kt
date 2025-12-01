@@ -1,36 +1,71 @@
 package com.ostapkhomiak.weatherapp.ui.screens.current
 
+
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ostapkhomiak.weatherapp.R
-import com.ostapkhomiak.weatherapp.domain.model.HoursWeather
-import com.ostapkhomiak.weatherapp.domain.model.Weather
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import com.ostapkhomiak.weatherapp.data.repository.WeatherRepository
 import kotlinx.coroutines.launch
 
-class CurrentViewModel : ViewModel() {  // repository
 
-    private val _state = MutableStateFlow(CurrentState())
-    val state: StateFlow<CurrentState> = _state
 
-    fun loadWeather() {
+class CurrentViewModel(
+    private val repository: WeatherRepository
+) : ViewModel() {
+
+    var state = mutableStateOf(CurrentState())
+        private set
+
+    fun loadWeather(lat: Double, lon: Double) {
+        state.value = state.value.copy(isLoading = true,)
+
         viewModelScope.launch {
-            _state.value = _state.value.copy(isLoading = true)
+            try {
+                val weather = repository.getForecast(lat, lon)
+                state.value = state.value.copy(
+                    isLoading = false,
+                    weather = weather,
+                )
+            } catch (e: Exception) {
+                state.value = state.value.copy(
+                    isLoading = false,
+                    error = e.message,
+                )
+            }
+        }
+    }
 
-            val fakeWeather = Weather(  // test
-                temperature = 23.5,
-                icon = R.drawable.ic_launcher_foreground,
-                hours = List(12) {
-                    HoursWeather(
-                        time = "${10 + it}:00",
-                        temperature = 20 + it.toDouble(),
-                        icon = R.drawable.ic_launcher_foreground
+    fun searchCity(cityName: String) {
+        state.value = state.value.copy(isLoading = true,)
+
+        viewModelScope.launch {
+            try {
+                val geoResults = repository.getCoordinatesForCity(cityName)
+
+                if (geoResults.isEmpty()) {
+                    state.value = state.value.copy(
+                        isLoading = false,
+                        error = "City not found",
                     )
+                    return@launch
                 }
-            )
 
-            _state.value = CurrentState(weather = fakeWeather)
+
+                val firstResult = geoResults.first()
+                val weather = repository.getForecast(firstResult.lat, firstResult.lon)
+
+
+                state.value = state.value.copy(
+                    isLoading = false,
+                    weather = weather,
+                    cityName = "${firstResult.name}, ${firstResult.country}"
+                )
+            } catch (e: Exception) {
+                state.value = state.value.copy(
+                    isLoading = false,
+                    error = e.message ?: "Failed to search city",
+                )
+            }
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.ostapkhomiak.weatherapp.ui.screens.current
 
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -14,35 +13,27 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.ostapkhomiak.weatherapp.domain.model.Weather
 import com.ostapkhomiak.weatherapp.ui.components.WeatherItem
 
 
 @Composable
-fun CurrentScreen(
-    viewModel: CurrentViewModel = viewModel(),
-) {
-    val state by viewModel.state.collectAsState()
+fun CurrentScreen(viewModel: CurrentViewModel) {
+    val state = viewModel.state.value
 
     LaunchedEffect(Unit) {
-        viewModel.loadWeather()
+        viewModel.searchCity("Warsaw")
     }
 
     when {
         state.isLoading -> LoadingScreen()
-        state.error != null -> ErrorScreen(state.error!!)
-        else -> state.weather?.let { weather ->
-            WeatherContent(weather)
-        }
+        state.error != null -> ErrorScreen(state.error)
+        state.weather != null -> WeatherContent(state.weather)
     }
 }
 
@@ -51,7 +42,9 @@ fun LoadingScreen() {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
-    ) { CircularProgressIndicator() }
+    ) {
+        CircularProgressIndicator()
+    }
 }
 
 @Composable
@@ -59,7 +52,9 @@ fun ErrorScreen(text: String) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
-    ) { Text("Error: $text") }
+    ) {
+        Text("Error: $text")
+    }
 }
 
 @Composable
@@ -71,10 +66,10 @@ fun WeatherContent(weather: Weather) {
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        Image(
-            painter = painterResource(id = weather.icon),
+        AsyncImage(
+            model = weather.iconUrl,
             contentDescription = null,
-            modifier = Modifier.size(140.dp),
+            modifier = Modifier.size(160.dp)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -86,13 +81,12 @@ fun WeatherContent(weather: Weather) {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize()
-        ) {
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(weather.hours) { hour ->
                 WeatherItem(hour)
             }
         }
     }
 }
+
 

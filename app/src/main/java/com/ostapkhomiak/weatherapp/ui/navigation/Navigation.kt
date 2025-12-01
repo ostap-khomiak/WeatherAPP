@@ -26,16 +26,27 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.ostapkhomiak.weatherapp.data.remote.RetrofitInstance
+import com.ostapkhomiak.weatherapp.data.repository.WeatherRepository
 import com.ostapkhomiak.weatherapp.ui.screens.current.CurrentScreen
 import com.ostapkhomiak.weatherapp.ui.screens.current.CurrentViewModel
 
+private const val API_KEY = "YOUR_API_KEY_HERE"
 
 @Composable
 fun NavigationInit(){
     val navController = rememberNavController()
 
-    val currentViewModel = remember { CurrentViewModel() }
 
+
+    val weatherRepository = remember {
+        WeatherRepository(
+            api = RetrofitInstance.api,
+            apiKey = API_KEY
+        )
+    }
+
+    val currentViewModel = remember { CurrentViewModel(weatherRepository) }
 
     Scaffold(
         bottomBar = { NavigationBarInit(navController) }
