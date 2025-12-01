@@ -26,12 +26,13 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.ostapkhomiak.weatherapp.BuildConfig
 import com.ostapkhomiak.weatherapp.data.remote.RetrofitInstance
 import com.ostapkhomiak.weatherapp.data.repository.WeatherRepository
 import com.ostapkhomiak.weatherapp.ui.screens.current.CurrentScreen
 import com.ostapkhomiak.weatherapp.ui.screens.current.CurrentViewModel
 
-private const val API_KEY = "YOUR_API_KEY_HERE"
+
 
 @Composable
 fun NavigationInit(){
@@ -42,7 +43,7 @@ fun NavigationInit(){
     val weatherRepository = remember {
         WeatherRepository(
             api = RetrofitInstance.api,
-            apiKey = API_KEY
+            apiKey = BuildConfig.API_KEY // place your OpenWeather API key into "local.preferences"
         )
     }
 

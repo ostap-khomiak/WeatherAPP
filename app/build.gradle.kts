@@ -1,8 +1,22 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 }
+
+// read API key from local.properties
+val localProperties = Properties().apply {
+    val localPropertiesFile = File(rootProject.rootDir, "local.properties")
+    if (localPropertiesFile.exists()) {
+        load(FileInputStream(localPropertiesFile))
+    }
+}
+val apiKey = localProperties.getProperty("API_KEY", "")
+
+android.buildFeatures.buildConfig = true
 
 android {
     namespace = "com.ostapkhomiak.weatherapp"
@@ -18,9 +32,13 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "API_KEY", "\"$apiKey\"")
+
     }
 
     buildTypes {
+
         release {
             isMinifyEnabled = false
             proguardFiles(
