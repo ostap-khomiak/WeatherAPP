@@ -31,7 +31,7 @@ import com.ostapkhomiak.weatherapp.data.remote.RetrofitInstance
 import com.ostapkhomiak.weatherapp.data.repository.WeatherRepository
 import com.ostapkhomiak.weatherapp.ui.screens.current.CurrentScreen
 import com.ostapkhomiak.weatherapp.ui.screens.current.CurrentViewModel
-
+import com.ostapkhomiak.weatherapp.ui.screens.settings.SettingsScreen
 
 
 @Composable
@@ -59,7 +59,7 @@ fun NavigationInit(){
         ) {
             composable(Screen.Current.route) { CurrentScreen(currentViewModel) }
             composable(Screen.Forecast.route) { Text("forecast") }
-            composable(Screen.Settings.route) { Text("settings") }
+            composable(Screen.Settings.route) { SettingsScreen() }
 
         }
     }
