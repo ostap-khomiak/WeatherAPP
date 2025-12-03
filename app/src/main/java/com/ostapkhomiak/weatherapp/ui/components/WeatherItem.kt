@@ -25,7 +25,7 @@ fun WeatherItem(item: HourWeather) {
     ) {
         Text(
             text = item.time,
-            fontSize = 18.sp,
+            fontSize = 16.sp,
             fontWeight = FontWeight.Medium,
             modifier = Modifier.weight(1f)
         )

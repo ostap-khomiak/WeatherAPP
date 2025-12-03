@@ -33,7 +33,7 @@ fun CurrentScreen(viewModel: CurrentViewModel) {
     when {
         state.isLoading -> LoadingScreen()
         state.error != null -> ErrorScreen(state.error)
-        state.weather != null -> WeatherContent(state.weather)
+        state.weather != null -> WeatherContent(state.weather, state.cityName)
     }
 }
 
@@ -58,13 +58,19 @@ fun ErrorScreen(text: String) {
 }
 
 @Composable
-fun WeatherContent(weather: Weather) {
+fun WeatherContent(weather: Weather, cityName: String?) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(modifier = Modifier.height(20.dp))
 
-        Spacer(modifier = Modifier.height(40.dp))
+        Text(
+            text = cityName ?: "",
+            fontSize = 32.sp
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
 
         AsyncImage(
             model = weather.iconUrl,
